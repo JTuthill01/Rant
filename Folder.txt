@@ -1,0 +1,70 @@
+To Delete, or Not delete.
+That is the question
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+preface
+*warning*
+The following views and opinions expressed here within are solely of the author's and DO NOT represent the views and opinions of any other entity or entities. In fact extreme caution should be used in the reading the following, and it is up to the reader to form their own opinions. The author will not be held liable for any actions or inaction's that occur after reading this. THINK FOR YOURSERLF!!!! 
+
+   INTRODUCTION
+	So before I get started let's cover a few FAQs that I'm sure are bound to arise. Those being: Who am I? What the hell is this? Why should I even care? Why should I even read this? 
+	Who am I? Well you may simply call me Shadow, I'm a “self taught” C++ / Unreal hobbyist of about 8+ years now. The word(s) self taught are a misnomer, but in this context self taught means that I have no formal education (College or University). Now then what hell is this? This paper is an attempt to finally just codify my research and my thoughts and opinions on the whole deleting the Binaries, Intermediate and Saved folders. Why you even care? Well if I'm being honest you shouldn't. In fact I'm going to postulate that if you're still reading this, then at this point you should stop and honestly consider your life choices and your life. Why should you even read this? You shouldn't. You should just continue blindly deleting those folders and living life to it's fullest. 
+Abstract
+This paper will do its best to cover several different things. Such as what is actually in those folders. Why you would want to delete them, and finally what purpose it serves to do so. Also will attempt to cover Live Coding and Hot Reloading. Though once more, I'm no expert and I'm bound to make omissions and mistakes. Any omission and mistakes are purely done by mistake and are not intentional. Ready? Lets begin
+
+Live coding
+What is Live Coding? Per Epic Live Coding is :
+“Unreal Engine (UE) supports Live Coding using an integration of Live++. Live Coding is a system that can rebuild your application's C++ code and patch its binaries while the engine is running. This functionality is available during the following scenarios:
+
+Editing your application in Unreal Editor.
+
+Running your application with Play In Editor (PIE).
+
+Running a packaged Desktop build of your application attached to the editor for debugging.
+
+This means that without interrupting playtesting sessions or work in the editor itself, you can make changes to C++ classes, compile, and immediately see those changes take effect. This provides significant benefits for iterative development when using C++ runtime logic, such as gameplay code or front end user interactions. Although the Hot Reload system is still available as an alternative, Live Coding is significantly faster and more flexible.”1 So what does this tell us? Lol well literally what it says I don't think much more needs to be said. Now then Live Coding comes with a huge caveat per Epic once more “When changing default values for variables, values set in the constructor implemented in the .cpp file will not update in existing instances of objects” 2
+Hot reload
+Once more we'll turn to Epic for explanation “Hot Reloading is the process of compiling new DLL files while the editor is open and loading them. While Hot Reload often works for a while, it is unreliable and frequently causes blueprint corruption or other issues (more info below). Most users recommend avoiding Hot Reloading entirely, which means you need to close the editor to compile safely.”3  furthermore “By default, a Hot Reload is initiated if you:
+
+Compile from your IDE with your project/Unreal Editor open
+
+Compile using the Compile button within Unreal Editor
+
+Create new C++ classes inside Unreal Editor
+
+You can stop this from occurring by disabling this setting in Editor Preferences: Automatically Compile Newly Added C++ Classes”4. Enough said
+
+The folders
+So with that all out of the way we come to the main thesis of this paper. Everyone's number solution to all of life's problem blindly deleting the Binaries, Intermediate and Saved folders. Before we get farther allow me to address the why behind I'm doing this. Folks this solution isn't the end all be all. This doesn't fix everything. Though I once saw someone reinstall their entire OS over a nullptr. Also if deleting those folders doesn't work the first time, what makes you think deleting them over and over will work?!? Okay rant over.  Let's look at the Binaries folder. What's in there? Short answer a lot of stuff, the important stuff being any Live Coding patches, and also the static and dynamic libraries are also in there. What exactly those are and do, is beyond the scope of this paper. The Intermediate folder, ever wonder where the “.generated.h” files are? Well look no farther. There's a bunch of other stuff contained in here, but those are the important ones as to this discussion. Finally the Saved folder, that basically has auto saves and other VS stuff in there. 
+
+Why delete
+and 
+why it works
+So moving on, why would you even want to do this? There's a few reasons that I know of that would cause the need for this. First one is simple, when deleting a custom class. Reason being as I noted the “generated.h” exists elsewhere. So if you create a class and then delete it, the “generated.h” still exists, and of course this bring us to the next big reason why. For those of you whom use Live Coding, and choose to ignore Epic and myself and modify the constructor (ctor) you've undoubtedly noticed that surprise, surprise your changes don't show up in your BP . Hopefully by now you know why, so when you delete those folders, and then generate the project files again, it forces Unreal to recompile all the static and dynamic libraries which in turn also runs the Unreal header Tool or UHT which pushes all those changes to your BP's. Third reason that I can think of, when adding a custom file to your project. Example I choose to keep all my “structs” in their own header files, and when you add a header to your project you have generate the project files, because it forces Unreal to look through the Source folder and recompile everything. This in turn adds that header to the sln file. Final reason I can think of, is when you move files around in the Source folder, the reason being is the same as the proceeding reason. Now this isn't and exhaustive list and nor was it ever intended to be, just the most common reasons I do it. 
+
+Off topic
+and
+final thoughts
+Now then, with all that in mind allow me to go off the rails, per see. My advice STOP COMPILING WITH THE EDITOR OPEN. Also install the debug symbols and start running in debug mode through your IDE. I hear all the time people complaining about wasting time closing the editor to compile and what not. Yet they're willing to wait hours and even days for help with an issue that could be easily solved by using debug mode. How does this make sense? Folks the Unreal Crash Reporter is useless, also known as the Unreal Black Screen of Death. When you run in debug mode with the debug symbols installed, and it crashes your IDE will take you to your code, and more often than not take you to the variable causing the crash. Also the IDE provides a list (Visual Studio calls it the autos list and locals) of the variables in scope of the function which a hugely useful tool in tracking down bugs. Now if you're not coding there's no reason to run in debug mode, but if you are this is the way to go. Do I use Live Coding? Yes I do, when I'm tweaking variables and such, but most generally no not really. Next I want to address the famous “MSB3079” error, this is a generic error thrown by Visual Studio, it means “Hey I can't compile, but I have no idea why!?!” so instead of nipping off and blindly deleting stuff,  just open the output log!!! 
+
+
+ Which can bee seen in the above picture. Next folks please, please, I'm begging you turn off IntelliSense errors which can be see here: 
+
+You of course don't have to, but unless you enjoy chasing errors that don't exist then I would highly suggest doing so. 
